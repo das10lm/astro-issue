@@ -22,7 +22,7 @@ const { story } = Astro.props;
       story.data.chapters.map((chapter) => (
         <article class="gallery-article">
           <a
-            href={`/series/${story.data.metadata.storyTitleSlug}/${chapter.frontmatter.slug}`}
+            href={`/series/${decodeURI(story.data.metadata.storyTitleSlug)}/${chapter.frontmatter.slug}`}
             class="story-link"
           >
             {chapter.frontmatter.title}

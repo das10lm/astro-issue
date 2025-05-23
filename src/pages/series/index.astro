@@ -16,7 +16,7 @@ allSeriesStories = allSeriesStories.sort((a, b) => {
       allSeriesStories.map((node) => (
         <article class="gallery-article">
           <a
-            href={`/series/${node.data.metadata.storyTitleSlug}`}
+            href={`/series/${decodeURI(node.data.metadata.storyTitleSlug)}`}
             class="story-link"
           >
             {node.data.metadata.storyTitle}
