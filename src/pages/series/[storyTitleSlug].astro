@@ -1,0 +1,60 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const allSeriesStories = await getCollection("series");
+  const paths = allSeriesStories.map((story) => ({
+    params: { storyTitleSlug: decodeURI(story.data.metadata.storyTitleSlug) },
+    props: { story },
+  }));
+
+  return paths;
+}
+
+const { storyTitleSlug } = Astro.params;
+const { story } = Astro.props;
+---
+
+<Layout pageTitle={`${story.data.metadata.storyTitle} - সূচিপত্র`}>
+  <div class="gallery-container">
+    {
+      story.data.chapters.map((chapter) => (
+        <article class="gallery-article">
+          <a
+            href={`/series/${story.data.metadata.storyTitleSlug}/${chapter.frontmatter.slug}`}
+            class="story-link"
+          >
+            {chapter.frontmatter.title}
+          </a>
+          <p>
+            Posted On {chapter.frontmatter.date.toDateString()} by
+            <a
+              class="underline"
+              href={`/authors/${story.data.metadata.author}`}
+            >
+              {story.data.metadata.author}
+            </a>
+          </p>
+        </article>
+      ))
+    }
+  </div>
+</Layout>
+
+<style>
+  .gallery-article {
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 10px;
+    width: 200px;
+    word-wrap: break-word;
+  }
+
+  .gallery-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+</style>

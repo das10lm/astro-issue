@@ -1,0 +1,50 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const allSeriesStories = await getCollection("series");
+  // fetch all chapters of all stories
+  const allStoryChapters = allSeriesStories.flatMap((story) => {
+    const allChapters = story.data.chapters.flatMap((chapter) => {
+      return {
+        params: {
+          storyChapterSlug: decodeURI(
+            `${story.data.metadata.storyTitleSlug}/${chapter.frontmatter.slug}`
+          ),
+        },
+        props: {
+          chapter,
+        },
+      };
+    });
+    return allChapters;
+  });
+
+  return allStoryChapters;
+}
+
+const { chapter } = Astro.props;
+
+const parent = `/series/${chapter.frontmatter.parentStory}`;
+---
+
+<Layout pageTitle={chapter.frontmatter.title} isIndexable>
+  <div class="pagination-container">
+    <a class="parent-btn" href={parent} title="Parent (p)"> Parent </a>
+  </div>
+
+  <article class="chapter-content">{chapter.content}</article>
+
+  <div class="pagination-container">
+    <a class="parent-btn" href={parent} title="Parent (p)"> Parent </a>
+  </div>
+</Layout>
+
+<style>
+  .chapter-content {
+    white-space: pre-wrap;
+    font-size: 20px;
+    padding: 100px 0;
+  }
+</style>

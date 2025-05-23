@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import Layout from "../layouts/Layout.astro";
+import Layout from "../../layouts/Layout.astro";
 
 let allSeriesStories = await getCollection("series");
 
@@ -9,9 +9,8 @@ allSeriesStories = allSeriesStories.sort((a, b) => {
 });
 ---
 
-<Layout pageTitle="My Website">
-  <h2>Welcome back</h2>
-  <a class="header-text" href="/series"> Series Stories </a>
+<Layout pageTitle="All Stories">
+  <h2>All Series Stories ({allSeriesStories.length} posts)</h2>
   <div class="gallery-container">
     {
       allSeriesStories.map((node) => (
